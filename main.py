@@ -1,32 +1,29 @@
 import streamlit as st
 import function
 
-st.title("Todo APP")
 
+file = function.openfile()
 
 def add_todo():
-    value = st.session_state["Input"]
-    file.append(value + '\n')
+    value = st.session_state["Input"]+"\n"
+    file.append(value)
     function.writeline(file)
 
 
-def show_list(file):
-    for files in file:
-        st.checkbox(files, key=files)
+st.title("Todo APP")
 
 
-file = list(function.openfile())
 
-show_list(file)
 
-for val in file:
-    match st.session_state[val]:
-        case True:
-            file.remove(val)
-            function.writeline(file)
-            del st.session_state[val]
-            st.experimental_rerun()
-        case False:
-            continue
+
+for index,val in enumerate(file):
+    checkbox=st.checkbox(val, key=val)
+    if checkbox:
+        file.pop(index)
+        function.writeline(file)
+        del st.session_state[val]
+        st.experimental_rerun()
+
+
 
 st.text_input('', placeholder="Add the todo ", on_change=add_todo, key="Input")
